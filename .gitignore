@@ -1,0 +1,6 @@
+venv
+models
+vector_dv
+documents_to_be_processed
+chroma_db
+__pycache__
