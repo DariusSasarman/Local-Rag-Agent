@@ -12,3 +12,4 @@ Here's what I'm planning to do :
   - [ ] Web information retrieval + Search query generating model
 - [ ] HNSW optimisation for vector search
 - [ ] Reciprocal Rank Fusion
+- [ ] Find ways to remove distracting vector search results automatically 
