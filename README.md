@@ -9,5 +9,6 @@ Here's what I'm planning to do :
   - [x] Vector encoder 
   - [ ] Keyword search 
   - [ ] SQL + Small model translation
-  - [ ] Web information retrieval through search
+  - [ ] Web information retrieval + Search query generating model
 - [ ] HNSW optimisation for vector search
+- [ ] Reciprocal Rank Fusion
