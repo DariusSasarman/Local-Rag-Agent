@@ -6,7 +6,7 @@ from pypdf import PdfReader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_chroma import Chroma
 from langchain_core.documents import Document
-from encoder import get_encoder
+from encoders.vector_encoder import get_encoder
 import glob
 
 class Vector_db ():

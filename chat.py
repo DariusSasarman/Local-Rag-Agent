@@ -1,6 +1,6 @@
 
-from vector_database import Vector_db
-from language_model import LocalQwen
+from retrievers.vector_database import Vector_db
+from models.language_model import LocalQwen
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough, RunnableLambda
