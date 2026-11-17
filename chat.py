@@ -1,5 +1,5 @@
 
-from retrievers.vector_database import Vector_db
+from retrievers.vector_retriever import Vector_db
 from models.language_model import LocalQwen
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
