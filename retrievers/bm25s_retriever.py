@@ -9,7 +9,7 @@ from langchain_core.retrievers import BaseRetriever
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 from encoders.best_matching_25_sparse import BM25Embeddings
-from base import Retriever
+from retrievers.base import Retriever
 
 class _BM25SSearch(BaseRetriever):
     index: Any
@@ -29,7 +29,9 @@ class _BM25SSearch(BaseRetriever):
 class BM25SRetriever(Retriever):
 
     def __init__(self, db_path: str = "./bm25.db"):
-        self.encoder = self.get_encoder()
+        self.encoder = BM25Embeddings.get_encoder()
+        if not os.path.exists(db_path) or not os.listdir(db_path):
+            os.makedirs(db_path, exist_ok=True)
         self.db = sqlite3.connect(db_path)
         self.db.execute("""
             CREATE TABLE IF NOT EXISTS chunks (
@@ -40,10 +42,7 @@ class BM25SRetriever(Retriever):
             )
         """)
 
-    def get_encoder(self):
-        return BM25Embeddings.get_encoder()
-
-    def _save_document(self, documents: list[Document], file_path: str):
+    def save_document(self, documents: list[Document], file_path: str):
         text = "\n\n".join(d.page_content for d in documents)
         splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
         chunks = splitter.split_text(text)

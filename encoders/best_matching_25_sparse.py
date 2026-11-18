@@ -1,5 +1,5 @@
 import bm25s
-from base import BaseEncoder
+from encoders.base import BaseEncoder
 
 class BM25Embeddings(BaseEncoder):
     def __init__(self):

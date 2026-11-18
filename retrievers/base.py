@@ -7,11 +7,7 @@ from langchain_unstructured import UnstructuredLoader
 class Retriever(ABC):
 
     @abstractmethod
-    def get_encoder(self):
-        ...
-
-    @abstractmethod
-    def _save_document(self, documents: list[Document], file_path: str):
+    def save_document(self, documents: list[Document], file_path: str):
         """
         Saves the loaded elements of one file to the datastore.
         The implementation decides how to merge/chunk them.
@@ -29,7 +25,7 @@ class Retriever(ABC):
             return
         documents = UnstructuredLoader(file_path).load()
         if documents:
-            self._save_document(documents, file_path)
+            self.save_document(documents, file_path)
 
     def process_folder(self, folder_path: str):
         if not os.path.isdir(folder_path):

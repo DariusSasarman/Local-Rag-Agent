@@ -1,5 +1,5 @@
-
-from retrievers.vector_retriever import Vector_db
+from retrievers.hybrid_retriever import HybridRetriever
+from retrievers.vector_retriever import VectorRetriever
 from models.language_model import LocalQwen
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
@@ -63,9 +63,9 @@ if __name__ == "__main__":
             standalone = q
 
         # 2. Encoder: retrieve
-        db = Vector_db()       # loads the encoder
-        docs = db.as_retriever().invoke(standalone)
-        del db
+        hybrid_db = HybridRetriever()       # loads the hybrid retriever
+        docs = hybrid_db.as_retriever().invoke(standalone)
+        del hybrid_db
         free_gpu()
 
         # 3. LLM: answer

@@ -7,19 +7,19 @@ from langchain_chroma import Chroma
 from encoders.vector_encoder import BGEEmbeddings
 from langchain_core.documents import Document
 from langchain_community.vectorstores.utils import filter_complex_metadata
-from base import Retriever
+from retrievers.base import Retriever
 
 class VectorRetriever(Retriever):
 
     def __init__(self, persist_directory: str = "./vector_db"):
-        self.embeddings = self.get_encoder()
+        self.embeddings = BGEEmbeddings.get_encoder()
+        if not os.path.exists(persist_directory) or not os.listdir(persist_directory):
+            os.makedirs(persist_directory, exist_ok=True)
+
         self.vector_db = Chroma(
             persist_directory=persist_directory,
             embedding_function=self.embeddings,
         )
-
-    def get_encoder(self):
-        return BGEEmbeddings.get_encoder()
 
     def as_retriever(self, k: int = 4):
         return self.vector_db.as_retriever(
@@ -27,7 +27,7 @@ class VectorRetriever(Retriever):
             search_kwargs={"k": k, "fetch_k": k * 4, "lambda_mult": 0.5},
         )
 
-    def _save_document(self, documents: list[Document], file_path: str):
+    def save_document(self, documents: list[Document], file_path: str):
         # Merge all elements into one text, then chunk it
         text = "\n\n".join(d.page_content for d in documents)
         merged = Document(page_content=text, metadata={"filepath": file_path})

@@ -1,7 +1,7 @@
 import os
 from functools import lru_cache
 from sentence_transformers import SentenceTransformer
-from base import BaseEncoder    
+from encoders.base import BaseEncoder
 
 
 class BGEEmbeddings(BaseEncoder):
