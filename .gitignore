@@ -1,7 +1,5 @@
 .venv
 venv
-models
-vector_dv
-documents_to_be_processed
-chroma_db
+encoders/models
+models/models
 __pycache__
