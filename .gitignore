@@ -2,4 +2,5 @@
 venv
 encoders/models
 models/models
+data/fiqa
 __pycache__
