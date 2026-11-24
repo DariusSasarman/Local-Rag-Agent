@@ -30,9 +30,11 @@ class BM25SRetriever(Retriever):
 
     def __init__(self, db_path: str = "./bm25.db"):
         self.encoder = BM25Embeddings.get_encoder()
-        if not os.path.exists(db_path) or not os.listdir(db_path):
-            os.makedirs(db_path, exist_ok=True)
-        self.db = sqlite3.connect(db_path)
+        parent = os.path.abspath(db_path)
+        os.makedirs(parent, exist_ok=True)
+        db_target_path = os.path.join(parent,"bm25.db")
+        self.db = sqlite3.connect(db_target_path)
+
         self.db.execute("""
             CREATE TABLE IF NOT EXISTS chunks (
                 id TEXT PRIMARY KEY,

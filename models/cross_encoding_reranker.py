@@ -7,7 +7,7 @@ from pydantic import BaseModel, PrivateAttr
 from sentence_transformers import CrossEncoder
 
 MODEL_NAME = "cross-encoder/ettin-reranker-17m-v1"
-MODELS_DIR = ""
+MODELS_DIR = "./models"
 
 
 def download_model():

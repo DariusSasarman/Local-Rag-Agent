@@ -7,7 +7,7 @@ from typing import Any
 
 
 MODEL_NAME = "Qwen/Qwen2.5-1.5B-Instruct"
-MODELS_DIR = ""
+MODELS_DIR = "./models"
 
 
 def download_model():
