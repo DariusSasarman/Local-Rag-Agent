@@ -1,3 +1,5 @@
+import pandas as pd
+
 from retrievers.hybrid_retriever import HybridRetriever
 from models.language_model import LocalQwen
 from langchain_core.prompts import PromptTemplate
@@ -37,7 +39,7 @@ def format_docs(docs):
     return "\n\n".join(doc.page_content for doc in docs)
 
 def format_history(history, max_turns=4):
-    return "\n".join(f"{role}: {msg}" for role, msg in history[-max_turns * 2:])
+    return "\n".join(f"{m['role']}: {m['content']}" for m in history[-max_turns * 2:])
 
 def free_gpu():
     gc.collect()
@@ -63,8 +65,29 @@ def generate_answer(llm_used, docs_inp, history_inp, query : str) -> str:
 
     return ret_answer
 
-def retrieve_documents(hybrid_db_location : str = "", context_query : str = ""):
-    hybrid_retriever = HybridRetriever()
+def ingest_documents(files, progress=gr.Progress()):
+    if not files:
+        yield "No files selected.", pd.DataFrame()
+        return
+
+    log, rows = "", []
+    hybrid_retriever = HybridRetriever(DB_PATH)
+    try:
+        for f in progress.tqdm(files, desc="Ingesting"):
+            try:
+                hybrid_retriever.ingest_document(f)
+                rows.append({"file": f, "status": "ok"})
+                log += f"OK {f}\n"
+            except Exception as e:
+                rows.append({"file": f, "status": str(e)})
+                log += f"FAIL {f}: {e}\n"
+            yield log, pd.DataFrame(rows)
+    finally:
+        del hybrid_retriever
+        free_gpu()
+
+def retrieve_documents(context_query : str = ""):
+    hybrid_retriever = HybridRetriever(DB_PATH)
     docs_ret = hybrid_retriever.as_retriever().invoke(context_query)
     del hybrid_retriever
     free_gpu()
@@ -75,10 +98,20 @@ def respond(message, history):
     hist = format_history(history)
     standalone = condense_history(llm, message, hist) if history else message
     standalone = standalone or message
-    docs = retrieve_documents(DB_PATH,standalone)
+    docs = retrieve_documents(standalone)
     return generate_answer(llm, docs, hist, message)
 
 if __name__ == "__main__":
     os.makedirs(COMMON_PATH,exist_ok=True)
     os.chdir(COMMON_PATH)
-    gr.ChatInterface(fn=respond).launch(theme="ocean")
+    with gr.Blocks() as demo:
+        with gr.Tab("Chat"):
+            gr.ChatInterface(fn=respond)
+        with gr.Tab("Document Database"):
+            files = gr.File(file_count="multiple", label="Documents", type="filepath")
+            btn = gr.Button("Ingest", variant="primary")
+            log = gr.Textbox(label="Log", lines=8)
+            table = gr.Dataframe(label="Results")
+            btn.click(ingest_documents, inputs=files, outputs=[log, table])
+
+    demo.launch()

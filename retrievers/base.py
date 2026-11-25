@@ -28,7 +28,7 @@ class Retriever(ABC):
             self.save_document(documents, file_path)
 
     def process_folder(self, folder_path: str):
-        if not os.path.isdir(folder_path):
+        if not os.path.isdir(folder_path) or not os.path.exists(folder_path):
             return
         pattern = os.path.join(folder_path, "**", "*")
         for file in glob.glob(pattern, recursive=True):
