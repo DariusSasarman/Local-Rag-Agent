@@ -9,11 +9,10 @@ Roadmap
 - [ ] HNSW optimisation for vector search
 - [x] Reciprocal Rank Fusion
 - [ ] Augment initial query with additional ones via query generation
-- [ ] Remove distracting vector search results using a Cross-encoder
+- [x] Remove distracting vector search results using a Cross-encoder
 - [x] Use a reranker and Top K selection to retrieve the best results 
 - [ ] Advanced techniques : Windowing and hierarchical retrieval
-- [ ] Use Ragas for evaluation
-
+- [x] Testing pipeline setup
 
 "For example window sizes are variable. 
 A too small one, might lead to not enough context, 
